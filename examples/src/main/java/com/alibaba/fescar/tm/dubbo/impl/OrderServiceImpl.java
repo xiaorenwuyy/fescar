@@ -35,6 +35,12 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+/**
+ * Please add the follow VM arguments:
+ * <pre>
+ *     -Djava.net.preferIPv4Stack=true
+ * </pre>
+ */
 public class OrderServiceImpl implements OrderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
@@ -61,6 +67,8 @@ public class OrderServiceImpl implements OrderService {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        LOGGER.info("Order Service SQL: insert into order_tbl (user_id, commodity_code, count, money) values ({}, {}, {}, {})" ,userId ,commodityCode ,orderCount ,orderMoney );
+
         jdbcTemplate.update(new PreparedStatementCreator() {
 
             @Override
@@ -76,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }, keyHolder);
 
-        order.id = (long) keyHolder.getKey();
+        order.id = (long)keyHolder.getKey();
 
         LOGGER.info("Order Service End ... Created " + order);
 

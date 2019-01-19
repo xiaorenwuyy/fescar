@@ -27,6 +27,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+/**
+ * Please add the follow VM arguments:
+ * <pre>
+ *     -Djava.net.preferIPv4Stack=true
+ * </pre>
+ */
 public class AccountServiceImpl implements AccountService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
@@ -40,9 +46,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void debit(String userId, int money) {
         LOGGER.info("Account Service ... xid: " + RootContext.getXID());
+        LOGGER.info("Deducting balance SQL: update account_tbl set money = money - {} where user_id = {}",money,userId);
+
         jdbcTemplate.update("update account_tbl set money = money - ? where user_id = ?", new Object[] {money, userId});
         LOGGER.info("Account Service End ... ");
-
     }
 
     public static void main(String[] args) throws Throwable {
